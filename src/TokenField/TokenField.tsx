@@ -80,20 +80,20 @@ const TokenField = ({
 
 
   // => BEFORE
-  // const equalsCheck = (tokensA: string[], tokensB: string[]) => {
-  //   return JSON.stringify(tokensA) === JSON.stringify(tokensB)
-  // }
-  // useEffect(() => {
-  //   if (state.tokens.length > 0 && !equalsCheck(tokens, state.tokens)) {
-  //     setTokens(tokens)
-  //   }
-  // }, [tokens])
+  const equalsCheck = (tokensA: string[], tokensB: string[]) => {
+    return JSON.stringify(tokensA) === JSON.stringify(tokensB)
+  }
+  useEffect(() => {
+    if (state.tokens.length > 0 && !equalsCheck(tokens, state.tokens)) {
+      setTokens(tokens)
+    }
+  }, [tokens])
 
 
   // => AFTER
-  useEffect(() => {
-     setTokens(tokens)
-  }, [tokens])
+  // useEffect(() => {
+  //    setTokens(tokens)
+  // }, [tokens])
 
   useEffect(() => {
     if (state.focusIndex !== -2) {
