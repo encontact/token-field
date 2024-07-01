@@ -1,0 +1,97 @@
+.react-token-field {
+}
+
+.tokens {
+  display: flex;
+  resize: none;
+  height: 200px;
+  border: 1px solid #ccc;
+  flex-wrap: wrap;
+  overflow: auto;
+  align-content: baseline;
+  gap: 5px;
+  padding: 10px;
+}
+
+.token {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.tag {
+  background: #eaf1fb;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+  display: flex;
+  align-self: baseline;
+  max-width: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+.input {
+  border: none;
+  appearance: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  text-indent: 7px;
+  bottom: 0;
+  font-size: 1em;
+  outline: none;
+  background: transparent;
+  color: currentColor;
+  width: calc(100% + 30px);
+}
+
+.value {
+  padding: 3px 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  padding: 3px 5px;
+  opacity: 0.5;
+}
+
+.remove:hover {
+  opacity: 1;
+}
+
+.remove:after {
+  display: flex;
+  font-weight: bold;
+  font-size: 1em;
+  content: '×';
+}
+
+.tag.selected {
+  color: #fff;
+  background: #007aff;
+}
+
+.tag.invalid {
+  background: #f6aebf;
+  border: 1px solid #d61f1f;
+  color: #d61f1f;
+}
+
+.tag.selected.invalid {
+  color: #fff;
+  background: #d61f1f;
+}
+
+.options {
+  position: absolute;
+}
+
+.selectedOption {
+  background: #f1f1f1;
+}
