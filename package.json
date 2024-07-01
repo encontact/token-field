@@ -1,8 +1,8 @@
 {
-  "name": "react-token-field",
-  "version": "2.0.11",
+  "name": "react-token-tt",
+  "version": "1.0.0",
   "description": "Create token fields with copy/paste and keyboard support",
-  "author": "Shahar Levi",
+  "author": "vittor-emanoel",
   "keywords": [
     "token",
     "fokenfield",
