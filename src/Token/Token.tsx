@@ -28,7 +28,7 @@ export const Token = React.forwardRef<
       deleteSelected,
       selected,
       hideRemoveButton,
-      renderToken
+      renderToken,
       errorIcon,
     },
     ref
