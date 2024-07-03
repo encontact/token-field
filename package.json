@@ -85,8 +85,5 @@
   },
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "react-token-field": "^2.0.10"
-  }
+  ]
 }
