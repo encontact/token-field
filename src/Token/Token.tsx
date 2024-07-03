@@ -1,7 +1,7 @@
-import classes from './../styles.module.css'
 import React, { CSSProperties, useImperativeHandle, useRef } from 'react'
 import { InputRef } from '../TokenField/TokenField'
 import { TokenProps, TokenState } from '../TokensReducer/TokensReducer'
+import classes from './../styles.module.css'
 
 export interface TokenAdditionalProps {
   index: number

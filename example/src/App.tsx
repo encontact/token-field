@@ -18,6 +18,8 @@ const App = () => {
       .then((res) => setUsers(res.users))
   }, [])
 
+  console.log(users, "users")
+
 
   const emailPattern: string = '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
 
@@ -35,7 +37,7 @@ const App = () => {
         pattern={emailPattern}
         delimiters=',; '
         showRemoveButton={false}
-        tokens={users.map((user) => user.firstName)}
+        tokens={['oi', 'hello', 'eaei']}
       />
     </div>
   )

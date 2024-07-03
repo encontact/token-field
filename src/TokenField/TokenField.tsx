@@ -79,21 +79,15 @@ const TokenField = ({
   }>(null)
 
 
-  // => BEFORE
   const equalsCheck = (tokensA: string[], tokensB: string[]) => {
     return JSON.stringify(tokensA) === JSON.stringify(tokensB)
   }
   useEffect(() => {
-    if (state.tokens.length > 0 && !equalsCheck(tokens, state.tokens)) {
+    if (tokens.length > 0 && !equalsCheck(tokens, state.tokens)) {
       setTokens(tokens)
     }
-  }, [tokens])
+  }, [tokens, state.tokens])
 
-
-  // => AFTER
-  // useEffect(() => {
-  //    setTokens(tokens)
-  // }, [tokens])
 
   useEffect(() => {
     if (state.focusIndex !== -2) {
@@ -330,9 +324,7 @@ const TokenField = ({
         onBlur={(e) => onBlur(e)}
       >
         {state.tokens.map((token, index) =>
-          index === state.editIndex && !readonly
-            ? getTokenInputElement(token, index)
-            : getTokenElement(token, index)
+          (index === state.editIndex && !readonly) ? getTokenInputElement(token, index) : getTokenElement(token, index)
         )}
         {getTokenNewInputElement()}
       </div>
