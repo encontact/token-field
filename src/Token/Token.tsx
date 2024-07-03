@@ -9,6 +9,7 @@ export interface TokenAdditionalProps {
   selected: boolean
   hideRemoveButton: boolean
   renderToken?: (state: TokenState) => React.ReactNode
+  errorIcon: React.ReactNode
 }
 
 export const Token = React.forwardRef<
@@ -28,6 +29,7 @@ export const Token = React.forwardRef<
       selected,
       hideRemoveButton,
       renderToken
+      errorIcon,
     },
     ref
   ): React.ReactElement => {
@@ -114,6 +116,10 @@ export const Token = React.forwardRef<
         }`}
         style={getCSS()}
       >
+        {!isValid(text) && (
+          <span className=" flex items-center py-[3px]">{errorIcon}</span>
+        )}
+
         {renderToken ? (
           renderToken({
             text: text,

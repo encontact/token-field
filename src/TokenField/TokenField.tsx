@@ -34,6 +34,7 @@ const TokenField = ({
   onChange,
   options,
   renderToken,
+  errorIcon,
   showRemoveButton,
   autoFocus = true,
   readonly = false
@@ -44,6 +45,7 @@ const TokenField = ({
   delimiters?: string
   readonly?: boolean
   showRemoveButton?: boolean
+  errorIcon?: React.ReactNode
   className?: string
   tokenFieldCSS?: TokenFieldCSS
   getTokenCSS?: (state: TokenState) => TokenCSS
@@ -139,6 +141,7 @@ const TokenField = ({
       <Token
         {...tokenProps}
         text={token}
+        errorIcon={errorIcon}
         renderToken={renderToken}
         hideRemoveButton={!showRemoveButton}
         ref={(el) => addRef(el, index)}
@@ -323,8 +326,10 @@ const TokenField = ({
         onFocus={(e) => onFocus(e)}
         onBlur={(e) => onBlur(e)}
       >
-        {state.tokens.map((token, index) =>
-          (index === state.editIndex && !readonly) ? getTokenInputElement(token, index) : getTokenElement(token, index)
+      {state.tokens.map((token, index) =>
+          index === state.editIndex && !readonly
+            ? getTokenInputElement(token, index)
+            : getTokenElement(token, index),
         )}
         {getTokenNewInputElement()}
       </div>
