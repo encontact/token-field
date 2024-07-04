@@ -6,7 +6,8 @@ const initialState = {
   selectedIndexes: [] as number[],
   editIndex: -1,
   focusIndex: -1,
-  lastActionTime: ''
+  lastActionTime: '',
+  shouldTriggerOnChange: false,
 }
 export type TokensState = typeof initialState
 export type FocusMovement = 'self' | 'back' | 'next' | 'none'
@@ -18,15 +19,15 @@ export type TokenState = {
 }
 
 export enum ActionType {
-  Add,
-  Update,
-  Delete,
-  DeleteLast,
-  Select,
-  Edit,
-  Focus,
-  FocusNew,
-  SetTokens
+  Add = 0,
+  Update = 1,
+  Delete = 2,
+  DeleteLast = 3,
+  Select = 4,
+  Edit = 5,
+  Focus = 6,
+  FocusNew = 7,
+  SetTokens = 8,
 }
 
 export interface DelimiterActions {
@@ -86,11 +87,7 @@ function focusNext(index: number, state: TokensState) {
   state.focusIndex = Math.min(state.tokens.length - 1, index + 1)
 }
 
-function handleFocus(
-  state: TokensState,
-  focus: FocusMovement,
-  index: number = -1
-) {
+function handleFocus(state: TokensState, focus: FocusMovement, index = -1) {
   if (focus === 'none') {
     state.focusIndex = -2
   } else if (focus === 'back') {
@@ -105,7 +102,7 @@ function handleFocus(
 const reducer = (state: TokensState, action: Action) => {
   const updatedState: TokensState = { ...state }
   let lastIndex: number
-  const tokens: string[] = updatedState.tokens.map((str) => str)
+  const tokens: string[] = updatedState.tokens.map(str => str)
   let multi: boolean
   switch (action.type) {
     case ActionType.SetTokens:
@@ -113,6 +110,7 @@ const reducer = (state: TokensState, action: Action) => {
       updatedState.selectedIndexes = []
       updatedState.editIndex = -1
       updatedState.focusIndex = -1
+      updatedState.shouldTriggerOnChange = false
       return updatedState
     case ActionType.Update:
       updatedState.selectedIndexes = []
@@ -122,12 +120,13 @@ const reducer = (state: TokensState, action: Action) => {
       updatedState.editIndex = -1
       handleFocus(updatedState, action.payload.focus)
       updatedState.selectedIndexes = [updatedState.focusIndex]
+      updatedState.shouldTriggerOnChange = true
       return updatedState
     case ActionType.Delete:
       lastIndex = action.payload.indexes.length - 1
       updatedState.lastActionTime = new Date().toISOString()
       updatedState.tokens = updatedState.tokens.filter(
-        (_, i) => !action.payload.indexes.includes(i)
+        (_, i) => !action.payload.indexes.includes(i),
       )
       multi = action.payload.indexes.length > 1
       if (multi) {
@@ -135,18 +134,19 @@ const reducer = (state: TokensState, action: Action) => {
       } else if (updatedState.focusIndex !== -1) {
         updatedState.focusIndex = Math.min(
           action.payload.indexes[lastIndex],
-          updatedState.tokens.length - 1
+          updatedState.tokens.length - 1,
         )
       }
       updatedState.selectedIndexes =
         updatedState.focusIndex !== -1 ? [updatedState.focusIndex] : []
       updatedState.editIndex = -1
+      updatedState.shouldTriggerOnChange = true
       return updatedState
     case ActionType.Select:
       updatedState.lastActionTime = new Date().toISOString()
       if (action.payload.add) {
         updatedState.selectedIndexes = Array.from(
-          new Set([...updatedState.selectedIndexes, ...action.payload.indexes])
+          new Set([...updatedState.selectedIndexes, ...action.payload.indexes]),
         )
       } else {
         updatedState.selectedIndexes = action.payload.indexes
@@ -160,6 +160,7 @@ const reducer = (state: TokensState, action: Action) => {
           action.payload.indexes[action.payload.indexes.length - 1]
       }
       updatedState.editIndex = -1
+      updatedState.shouldTriggerOnChange = false
       return updatedState
     case ActionType.Add:
       updatedState.lastActionTime = new Date().toISOString()
@@ -169,17 +170,20 @@ const reducer = (state: TokensState, action: Action) => {
       }
       handleFocus(updatedState, action.payload.focus)
       updatedState.editIndex = -1
+      updatedState.shouldTriggerOnChange = true
       return updatedState
     case ActionType.Edit:
       updatedState.lastActionTime = new Date().toISOString()
       updatedState.selectedIndexes = []
       updatedState.editIndex = action.payload.index
       updatedState.focusIndex = action.payload.index
+      updatedState.shouldTriggerOnChange = true
       return updatedState
     case ActionType.FocusNew:
       updatedState.lastActionTime = new Date().toISOString()
       updatedState.selectedIndexes = []
       updatedState.focusIndex = -1
+      updatedState.shouldTriggerOnChange = false
       return updatedState
     case ActionType.Focus:
       updatedState.lastActionTime = new Date().toISOString()
@@ -187,6 +191,7 @@ const reducer = (state: TokensState, action: Action) => {
       handleFocus(updatedState, action.payload.focus, action.payload.index)
       updatedState.selectedIndexes =
         updatedState.focusIndex !== -1 ? [updatedState.focusIndex] : []
+      updatedState.shouldTriggerOnChange = false
       return updatedState
     default:
       return state
@@ -196,7 +201,7 @@ const reducer = (state: TokensState, action: Action) => {
 export const useTokens = (
   pattern: string,
   readonly: boolean,
-  tokenCSS?: ((tokenState: TokenState) => TokenCSS) | undefined
+  tokenCSS?: ((tokenState: TokenState) => TokenCSS) | undefined,
 ) => {
   const [state, dispatch] = useReducer(reducer, { ...initialState })
 
@@ -204,7 +209,7 @@ export const useTokens = (
   function setTokens(tokens: string[]) {
     dispatch({
       type: ActionType.SetTokens,
-      payload: { tokens }
+      payload: { tokens },
     })
   }
 
@@ -216,7 +221,7 @@ export const useTokens = (
     if (!readonly) {
       dispatch({
         type: ActionType.Update,
-        payload: { tokens, index, focus }
+        payload: { tokens, index, focus },
       })
     }
   }
@@ -224,7 +229,7 @@ export const useTokens = (
   function selectToken(indexes: number[], add: boolean) {
     dispatch({
       type: ActionType.Select,
-      payload: { indexes, add }
+      payload: { indexes, add },
     })
   }
 
@@ -232,7 +237,7 @@ export const useTokens = (
     if (!readonly) {
       dispatch({
         type: ActionType.Delete,
-        payload: { indexes: [...indexes] }
+        payload: { indexes: [...indexes] },
       })
     }
   }
@@ -241,7 +246,7 @@ export const useTokens = (
     if (!readonly) {
       dispatch({
         type: ActionType.Delete,
-        payload: { indexes: [state.tokens.length - 1] }
+        payload: { indexes: [state.tokens.length - 1] },
       })
     }
   }
@@ -250,7 +255,7 @@ export const useTokens = (
     if (!readonly) {
       dispatch({
         type: ActionType.Add,
-        payload: { tokens, focus }
+        payload: { tokens, focus },
       })
     }
   }
@@ -259,7 +264,7 @@ export const useTokens = (
     if (!readonly) {
       dispatch({
         type: ActionType.Edit,
-        payload: { index }
+        payload: { index },
       })
     }
   }
@@ -267,13 +272,13 @@ export const useTokens = (
   function focus(index: number, focus: FocusMovement) {
     dispatch({
       type: ActionType.Focus,
-      payload: { focus, index }
+      payload: { focus, index },
     })
   }
 
   function focusNew() {
     dispatch({
-      type: ActionType.FocusNew
+      type: ActionType.FocusNew,
     })
   }
 
@@ -301,7 +306,7 @@ export const useTokens = (
   }
 
   function getSelectedTokenText() {
-    return state.selectedIndexes.map((index) => state.tokens[index])
+    return state.selectedIndexes.map(index => state.tokens[index])
   }
 
   return {
@@ -321,7 +326,7 @@ export const useTokens = (
     addToken,
     isValid,
     getSelectedTokenText,
-    getTokenStyle
+    getTokenStyle,
   }
 }
 

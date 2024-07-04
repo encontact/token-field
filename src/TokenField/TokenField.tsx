@@ -34,7 +34,7 @@ const TokenField = ({
   onChange,
   options,
   renderToken,
-  errorIcon,
+  errorContainer,
   showRemoveButton,
   autoFocus = true,
   readonly = false
@@ -45,7 +45,7 @@ const TokenField = ({
   delimiters?: string
   readonly?: boolean
   showRemoveButton?: boolean
-  errorIcon?: React.ReactNode
+  errorContainer?: React.ReactNode
   className?: string
   tokenFieldCSS?: TokenFieldCSS
   getTokenCSS?: (state: TokenState) => TokenCSS
@@ -113,21 +113,20 @@ const TokenField = ({
   }, [state.editIndex, state.focusIndex, state.tokens])
 
   useEffect(() => {
-    if (onChange) {
+    if (onChange && state.shouldTriggerOnChange) {
       const details: Details = { tokens: state.tokens, valid: [], invalid: [] }
-      state.tokens.forEach((text) => {
+      for (const text of state.tokens) {
         const valid: boolean = isValid(text)
         if (valid) {
-          details.valid!.push(text)
+          details.valid?.push(text)
         } else {
-          details.invalid!.push(text)
+          details.invalid?.push(text)
         }
-      })
+      }
       updateOptionsPosition()
       onChange(details)
     }
   }, [state.tokens])
-
   function updateOptionsPosition() {
     if (state.editIndex === -1) {
       setPosition(newTokenRef.current!.position())
@@ -141,7 +140,7 @@ const TokenField = ({
       <Token
         {...tokenProps}
         text={token}
-        errorIcon={errorIcon}
+        errorContainer={errorContainer}
         renderToken={renderToken}
         hideRemoveButton={!showRemoveButton}
         ref={(el) => addRef(el, index)}
