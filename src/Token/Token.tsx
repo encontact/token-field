@@ -1,4 +1,5 @@
 import React, { CSSProperties, useImperativeHandle, useRef } from 'react'
+import { CloseIcon } from '../Styles/closeIcon'
 import { InputRef } from '../TokenField/TokenField'
 import { TokenProps, TokenState } from '../TokensReducer/TokensReducer'
 import classes from './../styles.module.css'
@@ -31,7 +32,7 @@ export const Token = React.forwardRef<
       renderToken,
       errorContainer,
     },
-    ref
+    ref,
   ): React.ReactElement => {
     const tokenRef = useRef<HTMLSpanElement>(null)
 
@@ -45,8 +46,8 @@ export const Token = React.forwardRef<
       clear: () => {},
       position: () => ({
         top: tokenRef.current?.getBoundingClientRect().top || 0,
-        left: tokenRef.current?.getBoundingClientRect().left || 0
-      })
+        left: tokenRef.current?.getBoundingClientRect().left || 0,
+      }),
     }))
 
     function getCSS(): CSSProperties {
@@ -54,7 +55,7 @@ export const Token = React.forwardRef<
         text,
         selected,
         invalid: !isValid(text),
-        index
+        index,
       }) as CSSProperties
     }
 
@@ -107,10 +108,10 @@ export const Token = React.forwardRef<
     return (
       <span
         tabIndex={-1}
-        onKeyDown={(e) => KeyDown(e)}
+        onKeyDown={e => KeyDown(e)}
         ref={tokenRef}
-        onDoubleClick={(e) => editItem(e)}
-        onMouseDown={(e) => selectItem(e)}
+        onDoubleClick={e => editItem(e)}
+        onMouseDown={e => selectItem(e)}
         className={`${classes.tag} ${!isValid(text) ? classes.invalid : ''} ${
           selected ? classes.selected : ''
         }`}
@@ -123,15 +124,27 @@ export const Token = React.forwardRef<
             text: text,
             index,
             invalid: !isValid(text),
-            selected
+            selected,
           })
         ) : (
           <span className={classes.value}>{text}</span>
         )}
         {hideRemoveButton ? (
-          <span onClick={(e) => deleteItem(e)} className={classes.remove} />
+          <span
+            onClick={e => deleteItem(e)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '7px',
+              cursor: 'pointer',
+            }}
+            className={classes.close}
+          >
+            <CloseIcon fill={!isValid(text) ? 'red' : '#71717A'} />
+          </span>
         ) : null}
       </span>
     )
-  }
+  },
 )

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
-  getTokenFieldCSS,
   TokenCSS,
-  TokenFieldCSS
+  TokenFieldCSS,
+  getTokenFieldCSS,
 } from '../Styles/Token.style'
 import { Token } from '../Token/Token'
 import TokenInput from '../TokenInput/TokenInput'
@@ -37,7 +37,7 @@ const TokenField = ({
   errorContainer,
   showRemoveButton,
   autoFocus = true,
-  readonly = false
+  readonly = false,
 }: {
   tokens?: string[]
   pattern?: string
@@ -67,7 +67,7 @@ const TokenField = ({
     updateToken,
     deleteSelected,
     setTokens,
-    getSelectedTokenText
+    getSelectedTokenText,
   } = tokenProps
   const focusRefs = useRef<InputRef[]>([])
   const newTokenRef = useRef<NewInputRef | null>(null)
@@ -80,7 +80,6 @@ const TokenField = ({
     top: number
   }>(null)
 
-
   const equalsCheck = (tokensA: string[], tokensB: string[]) => {
     return JSON.stringify(tokensA) === JSON.stringify(tokensB)
   }
@@ -89,7 +88,6 @@ const TokenField = ({
       setTokens(tokens)
     }
   }, [tokens])
-
 
   useEffect(() => {
     if (state.focusIndex !== -2) {
@@ -143,7 +141,7 @@ const TokenField = ({
         errorContainer={errorContainer}
         renderToken={renderToken}
         hideRemoveButton={!showRemoveButton}
-        ref={(el) => addRef(el, index)}
+        ref={el => addRef(el, index)}
         selected={state.selectedIndexes.includes(index)}
         index={index}
         key={'token_' + index}
@@ -184,13 +182,13 @@ const TokenField = ({
       <TokenInput
         {...tokenProps}
         text={token}
-        onInput={(val) => onInput(val)}
-        ref={(el) => addRef(el, index)}
+        onInput={val => onInput(val)}
+        ref={el => addRef(el, index)}
         index={index}
         isFocusOnOptions={isFocusOptions}
         hideRemoveButton={!showRemoveButton}
-        containDelimiter={(key) => containDelimiter(key)}
-        parseToken={(token) => parseToken(token)}
+        containDelimiter={key => containDelimiter(key)}
+        parseToken={token => parseToken(token)}
         selected={state.selectedIndexes.includes(index)}
         key={'token_input_' + index}
       />
@@ -201,14 +199,14 @@ const TokenField = ({
     if (!readonly) {
       return (
         <TokenNewInput
-          onInput={(val) => onInput(val)}
+          onInput={val => onInput(val)}
           placeholder={placeholder}
           hideRemoveButton={!showRemoveButton}
           ref={newTokenRef}
           {...tokenProps}
-          containDelimiter={(key) => containDelimiter(key)}
-          parseToken={(token) => parseToken(token)}
-          key='token_input_new'
+          containDelimiter={key => containDelimiter(key)}
+          parseToken={token => parseToken(token)}
+          key="token_input_new"
         />
       )
     } else {
@@ -273,8 +271,8 @@ const TokenField = ({
     } else if (cmdPressed && event.nativeEvent.code === 'KeyC') {
       copyToken(
         [...getSelectedTokenText(), newTokenRef.current?.value()]
-          .filter((str) => str?.trim())
-          .join(delimiters[0])
+          .filter(str => str?.trim())
+          .join(delimiters[0]),
       )
       focusNew()
       event.preventDefault()
@@ -319,13 +317,13 @@ const TokenField = ({
       <div
         className={classes.tokens}
         style={getTokenFieldCSS(tokenFieldCSS)}
-        onKeyDown={(e) => onKeyDown(e)}
+        onKeyDown={e => onKeyDown(e)}
         tabIndex={-1}
         ref={tokenFieldRef}
-        onFocus={(e) => onFocus(e)}
-        onBlur={(e) => onBlur(e)}
+        onFocus={e => onFocus(e)}
+        onBlur={e => onBlur(e)}
       >
-      {state.tokens.map((token, index) =>
+        {state.tokens.map((token, index) =>
           index === state.editIndex && !readonly
             ? getTokenInputElement(token, index)
             : getTokenElement(token, index),

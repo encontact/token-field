@@ -1,6 +1,6 @@
 {
   "name": "@encontactlabs/token-field",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create token fields with copy/paste and keyboard support",
   "author": "vittor-emanoel",
   "keywords": [

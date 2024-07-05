@@ -20,6 +20,16 @@
   position: relative;
 }
 
+.closeBtn {
+  display: 'flex';
+  alignItems: 'center';
+  justifyContent: 'center';
+  marginRight: '7px';
+  cursor: 'pointer';
+
+
+}
+
 .tag {
   background: #eaf1fb;
   border: 1px solid #d9d9d9;
