@@ -87,7 +87,7 @@ const TokenField = ({
     if (tokens.length > 0 && !equalsCheck(tokens, state.tokens)) {
       setTokens(tokens)
     }
-  }, [tokens])
+  }, [state.tokens])
 
   useEffect(() => {
     if (state.focusIndex !== -2) {
